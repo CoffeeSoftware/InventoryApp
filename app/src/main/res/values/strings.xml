@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">InventarSoft</string>
+
+    <!-- Editor -->
+    <string name="nume_editor">Nume</string>
+    <string name="COD_editor">COD</string>
+    <string name="Save_editor">Salveaza</string>
+    <string name="generate_bar_code">generate_code</string>
 </resources>

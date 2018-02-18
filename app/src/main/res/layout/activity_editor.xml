@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.EditorActivity"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/nume_editor"
+        android:id="@+id/Camp_nume"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/COD_editor"
+        android:id="@+id/Camp_Cod"
+        android:inputType="number"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/save_button_produs"
+        android:background="@color/secondaryLightColor"
+        android:text="@string/Save_editor"
+        android:padding="12dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/generate_button"
+        android:background="@color/secondaryLightColor"
+        android:text="@string/generate_bar_code"
+        android:padding="12dp"/>
+</LinearLayout>
