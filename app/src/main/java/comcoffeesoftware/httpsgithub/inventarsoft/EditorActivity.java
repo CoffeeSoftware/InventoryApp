@@ -1,14 +1,25 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Vector;
+
+import static android.graphics.Path.Direction.CW;
 import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codOK;
 
 /**
@@ -44,10 +55,32 @@ public class EditorActivity extends AppCompatActivity {
         TextView buttonGenerateBarCode = (TextView) findViewById(R.id.generate_button);
         buttonGenerateBarCode.setOnClickListener(new View.OnClickListener() {
 
+            @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 String codString = codProdus.getText().toString();
-                Toast.makeText(EditorActivity.this, "Cod: " + codOK(codString), Toast.LENGTH_SHORT).show();
+                codString = codOK(codString);
+                Toast.makeText(EditorActivity.this, "Cod: " + codString, Toast.LENGTH_SHORT).show();
+
+                // TODO
+                Bitmap bitmap = Bitmap.createBitmap(300, 100, Bitmap.Config.ARGB_8888);
+                Canvas barcodeCanvas = new Canvas(bitmap);
+                Path path1 = new Path();
+                Paint paintAlb = new Paint();
+                paintAlb.setColor(getColor(R.color.primaryLightColor));
+
+                for (int i = 1; i < 96; i++) {
+                    if (codString.charAt(i-1) == '1') {
+                        int bottom = 80;
+                        if ((i < 4) || (i == 46) || (i == 47) || (i == 48) || (i == 49) || (i == 50) || (i > 92)) bottom += 10;
+                        path1.addRect(i * 2 - 2, 10, i * 2, bottom, CW);
+                    }
+                }
+
+                barcodeCanvas.drawPath(path1, paintAlb);
+
+                ImageView img = (ImageView) findViewById(R.id.cod_image);
+                img.setImageBitmap(bitmap);
 
             }
         });
