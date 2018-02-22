@@ -78,6 +78,31 @@ public class GeneratorCodBare {
                 return "1110010";
         }
     }
+    private static String codificareL(int x) {
+        switch (x) {
+            case 0:
+                return "0001101";
+            case 1:
+                return "0011001";
+            case 2:
+                return "0010011";
+            case 3:
+                return "0111101";
+            case 4:
+                return "0100011";
+            case 5:
+                return "0110001";
+            case 6:
+                return "0101111";
+            case 7:
+                return "0111011";
+            case 8:
+                return "0110111";
+            case 9:
+                return "0001011";
+            default: return "0001101";
+        }
+    }
 
     private static String codificareG(int x) {
         switch (x) {
@@ -129,29 +154,5 @@ public class GeneratorCodBare {
         return cifraControl;
     }
 
-    private static String codificareL(int x) {
-        switch (x) {
-            case 0:
-                return "0001101";
-            case 1:
-                return "0011001";
-            case 2:
-                return "0010011";
-            case 3:
-                return "0111101";
-            case 4:
-                return "0100011";
-            case 5:
-                return "0110001";
-            case 6:
-                return "0101111";
-            case 7:
-                return "0111011";
-            case 8:
-                return "0110111";
-            case 9:
-                return "0001011";
-            default: return "0001101";
-        }
-    }
+
 }

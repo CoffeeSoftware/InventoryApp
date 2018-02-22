@@ -4,12 +4,14 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -35,7 +37,7 @@ public class EditorActivity extends AppCompatActivity {
 
         final EditText numeProdus = (EditText) findViewById(R.id.Camp_nume);
         final EditText codProdus=(EditText) findViewById(R.id.Camp_Cod);
-
+        final Bitmap bitmapCod = Bitmap.createBitmap(300, 100, Bitmap.Config.ARGB_8888);;
 
 
         TextView buttonSave = (TextView) findViewById(R.id.save_button_produs);
@@ -63,9 +65,8 @@ public class EditorActivity extends AppCompatActivity {
                 Toast.makeText(EditorActivity.this, "Cod: " + codString, Toast.LENGTH_SHORT).show();
 
                 // TODO
-                Bitmap bitmap = Bitmap.createBitmap(300, 100, Bitmap.Config.ARGB_8888);
-                Canvas barcodeCanvas = new Canvas(bitmap);
-                Path path1 = new Path();
+                Canvas barcodeCanvas = new Canvas(bitmapCod);
+                Path path = new Path();
                 Paint paintAlb = new Paint();
                 paintAlb.setColor(getColor(R.color.primaryLightColor));
 
@@ -73,15 +74,27 @@ public class EditorActivity extends AppCompatActivity {
                     if (codString.charAt(i-1) == '1') {
                         int bottom = 80;
                         if ((i < 4) || (i == 46) || (i == 47) || (i == 48) || (i == 49) || (i == 50) || (i > 92)) bottom += 10;
-                        path1.addRect(i * 2 - 2, 10, i * 2, bottom, CW);
+                        path.addRect(i * 2 - 2, 10, i * 2, bottom, CW);
                     }
                 }
 
-                barcodeCanvas.drawPath(path1, paintAlb);
+                barcodeCanvas.drawPath(path, paintAlb);
 
                 ImageView img = (ImageView) findViewById(R.id.cod_image);
-                img.setImageBitmap(bitmap);
+                img.setImageBitmap(bitmapCod);
 
+
+            }
+        });
+
+        TextView butonPrinteza = (TextView) findViewById(R.id.print_button);
+        butonPrinteza.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                PrintHelper printHelper = new PrintHelper(EditorActivity.this);
+                printHelper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+                printHelper.printBitmap("printare Cod", bitmapCod);
             }
         });
     }

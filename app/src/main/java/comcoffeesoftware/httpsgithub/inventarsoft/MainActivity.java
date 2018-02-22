@@ -21,5 +21,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ListaProduseActivity.class));
             }
         });
+
+        // Trimitere la contact
+        ImageView imageViewContact = (ImageView) findViewById(R.id.imagine_contact);
+        imageViewContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ContactActivity.class));
+            }
+        });
     }
 }

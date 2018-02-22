@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.ContactActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+    <ImageView
+        android:id="@+id/huhgki"
+        android:layout_width="192dp"
+        android:layout_height="80dp"
+        style="@style/StilPentruImagini"
+        android:src="@drawable/ic_message_text_outline_white_48dp"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/hjlugu"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            style="@style/StilPentruImagini"
+            android:src="@drawable/ic_account_settings_variant_white_48dp" />
+        <ImageView
+            android:id="@+id/imagine_contact"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            style="@style/StilPentruImagini"
+            android:src="@drawable/ic_message_text_outline_white_48dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/sd"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            style="@style/StilPentruImagini"
+            android:src="@drawable/ic_account_settings_variant_white_48dp" />
+        <ImageView
+            android:id="@+id/hjghkhjlk"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            style="@style/StilPentruImagini"
+            android:src="@drawable/ic_message_text_outline_white_48dp"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/huhgi"
+        android:layout_width="192dp"
+        android:layout_height="80dp"
+        style="@style/StilPentruImagini"
+        android:src="@drawable/ic_message_text_outline_white_48dp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

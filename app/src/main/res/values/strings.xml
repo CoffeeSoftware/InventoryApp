@@ -6,4 +6,5 @@
     <string name="COD_editor">COD</string>
     <string name="Save_editor">Salveaza</string>
     <string name="generate_bar_code">generate_code</string>
+    <string name="print_bar_code">Print</string>
 </resources>
