@@ -5,45 +5,116 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="comcoffeesoftware.httpsgithub.inventarsoft.EditorActivity"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:gravity="center">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primaryLightColor"
+    android:layout_margin="8dp"
+    android:elevation="8dp"
+    android:padding="1dp">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/nume_editor"
-        android:id="@+id/Camp_nume"/>
+        android:id="@+id/Camp_nume"
+        android:background="@color/primaryTextColor"
+        android:padding="4dp"
+        android:gravity="center"
+        android:textColor="@color/secondaryColor"/>
+</FrameLayout>
 
-    <EditText
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/COD_editor"
-        android:id="@+id/Camp_Cod"
-        android:inputType="number"/>
+        android:background="@color/primaryLightColor"
+        android:layout_margin="8dp"
+        android:elevation="8dp"
+        android:padding="1dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/COD_editor"
+            android:id="@+id/Camp_Cod"
+            android:inputType="number"
+            android:background="@color/primaryTextColor"
+            android:padding="4dp"
+            android:gravity="center"
+            android:textColor="@color/secondaryColor"/>
+    </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/save_button_produs"
-        android:background="@color/secondaryLightColor"
-        android:text="@string/Save_editor"
-        android:padding="12dp"/>
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/cod_image"/>
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/generate_button"
-        android:background="@color/secondaryLightColor"
-        android:text="@string/generate_bar_code"
-        android:padding="12dp"/>
-    <TextView
-        android:layout_width="wrap_content"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_button_produs"
+            android:background="@color/secondaryColor"
+            android:text="@string/Save_editor"
+            android:padding="12dp"
+            android:src="@drawable/ic_content_save_outline_white_48dp"
+            android:layout_margin="2dp"
+            android:elevation="2dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_button"
+            android:background="@color/secondaryColor"
+            android:text="@string/print_bar_code"
+            android:padding="12dp"
+            android:src="@drawable/ic_delete_empty_white_48dp"
+            android:layout_margin="2dp"
+            android:elevation="2dp"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="192dp"
         android:layout_height="wrap_content"
-        android:id="@+id/print_button"
-        android:background="@color/secondaryLightColor"
-        android:text="@string/print_bar_code"
-        android:padding="12dp"/>
+        android:elevation="8dp"
+        android:background="@color/primaryTextColor"
+        android:layout_margin="8dp"
+        android:id="@+id/frame_cod">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="94dp"
+            android:id="@+id/cod_image"
+            android:layout_gravity="center"
+            android:background="@color/primaryTextColor"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"/>
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/generate_button"
+            android:background="@color/secondaryColor"
+            android:text="@string/generate_bar_code"
+            android:padding="12dp"
+            android:src="@drawable/ic_barcode_white_48dp"
+            android:layout_margin="2dp"
+            android:elevation="2dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/print_button"
+            android:background="@color/secondaryColor"
+            android:text="@string/print_bar_code"
+            android:padding="12dp"
+            android:src="@drawable/ic_printer_white_48dp"
+            android:layout_margin="2dp"
+            android:elevation="2dp"/>
+    </LinearLayout>
+
+
 
 </LinearLayout>

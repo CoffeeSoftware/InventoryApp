@@ -15,6 +15,7 @@ import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,10 +38,13 @@ public class EditorActivity extends AppCompatActivity {
 
         final EditText numeProdus = (EditText) findViewById(R.id.Camp_nume);
         final EditText codProdus=(EditText) findViewById(R.id.Camp_Cod);
-        final Bitmap bitmapCod = Bitmap.createBitmap(300, 100, Bitmap.Config.ARGB_8888);;
+        final ImageView imagineCuCod = (ImageView) findViewById(R.id.cod_image);
+        final FrameLayout frameLayoutCod = (FrameLayout) findViewById(R.id.frame_cod);
+        final Bitmap bitmapCod = Bitmap.createBitmap(192, 94, Bitmap.Config.ARGB_8888);;
+        imagineCuCod.setVisibility(View.GONE);
+        frameLayoutCod.setVisibility(View.GONE);
 
-
-        TextView buttonSave = (TextView) findViewById(R.id.save_button_produs);
+        ImageView buttonSave = (ImageView) findViewById(R.id.save_button_produs);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +58,7 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
-        TextView buttonGenerateBarCode = (TextView) findViewById(R.id.generate_button);
+        ImageView buttonGenerateBarCode = (ImageView) findViewById(R.id.generate_button);
         buttonGenerateBarCode.setOnClickListener(new View.OnClickListener() {
 
             @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.M)
@@ -62,13 +66,12 @@ public class EditorActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String codString = codProdus.getText().toString();
                 codString = codOK(codString);
-                Toast.makeText(EditorActivity.this, "Cod: " + codString, Toast.LENGTH_SHORT).show();
 
                 // TODO
                 Canvas barcodeCanvas = new Canvas(bitmapCod);
                 Path path = new Path();
                 Paint paintAlb = new Paint();
-                paintAlb.setColor(getColor(R.color.primaryLightColor));
+                paintAlb.setColor(getColor(R.color.secondaryColor));
 
                 for (int i = 1; i < 96; i++) {
                     if (codString.charAt(i-1) == '1') {
@@ -82,12 +85,14 @@ public class EditorActivity extends AppCompatActivity {
 
                 ImageView img = (ImageView) findViewById(R.id.cod_image);
                 img.setImageBitmap(bitmapCod);
+                frameLayoutCod.setVisibility(View.VISIBLE);
+                imagineCuCod.setVisibility(View.VISIBLE);
 
 
             }
         });
 
-        TextView butonPrinteza = (TextView) findViewById(R.id.print_button);
+        ImageView butonPrinteza = (ImageView) findViewById(R.id.print_button);
         butonPrinteza.setOnClickListener(new View.OnClickListener() {
 
             @Override

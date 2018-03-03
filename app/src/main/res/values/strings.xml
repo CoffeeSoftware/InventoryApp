@@ -2,9 +2,10 @@
     <string name="app_name">InventarSoft</string>
 
     <!-- Editor -->
-    <string name="nume_editor">Nume</string>
-    <string name="COD_editor">COD</string>
+    <string name="nume_editor">Introduceti Numele Produsului</string>
+    <string name="COD_editor">Introduceti Codul Produsului</string>
     <string name="Save_editor">Salveaza</string>
     <string name="generate_bar_code">generate_code</string>
     <string name="print_bar_code">Print</string>
+    <string name="scan_string">Scaneaza</string>
 </resources>

@@ -8,11 +8,12 @@
     android:orientation="vertical"
     android:gravity="center">
     <ImageView
-        android:id="@+id/huhgki"
+        android:id="@+id/email"
         android:layout_width="192dp"
         android:layout_height="80dp"
         style="@style/StilPentruImagini"
-        android:src="@drawable/ic_message_text_outline_white_48dp"
+        android:background="@color/primaryColor"
+        android:src="@drawable/ic_at_white_48dp"
         android:layout_gravity="center"/>
 
     <LinearLayout
@@ -20,17 +21,19 @@
         android:layout_height="110dp"
         android:layout_gravity="center">
         <ImageView
-            android:id="@+id/hjlugu"
+            android:id="@+id/SMS"
             android:layout_width="80dp"
             android:layout_height="80dp"
             style="@style/StilPentruImagini"
-            android:src="@drawable/ic_account_settings_variant_white_48dp" />
+            android:src="@drawable/ic_forum_white_48dp"
+            android:background="@color/primaryColor"/>
         <ImageView
-            android:id="@+id/imagine_contact"
+            android:id="@+id/Telefon"
             android:layout_width="80dp"
             android:layout_height="80dp"
             style="@style/StilPentruImagini"
-            android:src="@drawable/ic_message_text_outline_white_48dp"/>
+            android:src="@drawable/ic_phone_in_talk_white_48dp"
+            android:background="@color/primaryColor"/>
     </LinearLayout>
 
     <LinearLayout
@@ -38,24 +41,27 @@
         android:layout_height="110dp"
         android:layout_gravity="center">
         <ImageView
-            android:id="@+id/sd"
+            android:id="@+id/Adresa_Facebook"
             android:layout_width="80dp"
             android:layout_height="80dp"
             style="@style/StilPentruImagini"
-            android:src="@drawable/ic_account_settings_variant_white_48dp" />
+            android:src="@drawable/ic_facebook_white_48dp"
+            android:background="@color/primaryColor"/>
         <ImageView
-            android:id="@+id/hjghkhjlk"
+            android:id="@+id/Donatii"
             android:layout_width="80dp"
             android:layout_height="80dp"
             style="@style/StilPentruImagini"
-            android:src="@drawable/ic_message_text_outline_white_48dp"/>
+            android:src="@drawable/ic_stack_overflow_white_48dp"
+            android:background="@color/primaryColor"/>
     </LinearLayout>
     <ImageView
-        android:id="@+id/huhgi"
+        android:id="@+id/Whats_Up"
         android:layout_width="192dp"
         android:layout_height="80dp"
         style="@style/StilPentruImagini"
-        android:src="@drawable/ic_message_text_outline_white_48dp"
-        android:layout_gravity="center"/>
+        android:src="@drawable/ic_whatsapp_white_48dp"
+        android:layout_gravity="center"
+        android:background="@color/primaryColor"/>
 
 </LinearLayout>
