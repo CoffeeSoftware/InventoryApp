@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:background="@color/primaryColor"
     android:layout_margin="4dp"
-    android:elevation="4dp"
+    android:elevation="8dp"
     android:id="@+id/edit_view">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imagine_produs"
-        android:src="@drawable/ic_account_circle"
-        android:padding="10dp"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="80dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imagine_produs"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/secondaryColor"
+            android:src="@drawable/ic_account_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,13 +36,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/nume_produs"
             android:gravity="center"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:textColor="@color/secondaryColor"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cod_produs"
             android:gravity="center"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:textColor="@color/secondaryLightColor"/>
     </LinearLayout>
 
 

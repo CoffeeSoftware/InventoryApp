@@ -1,7 +1,5 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -18,7 +16,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Vector;
 
 import static android.graphics.Path.Direction.CW;
 import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codOK;
@@ -59,6 +55,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     private EditText numeProdus;
     private EditText codProdus;
+    private ImageView camera;
     private ImageView pozaProdus;
 
     // onTouchListener ca sa stim daca s-a editat ceva
@@ -85,9 +82,10 @@ public class EditorActivity extends AppCompatActivity implements
         codProdus=(EditText) findViewById(R.id.Camp_Cod);
         final ImageView imagineCuCod = (ImageView) findViewById(R.id.cod_image);
         final FrameLayout frameLayoutCod = (FrameLayout) findViewById(R.id.frame_cod);
-        final Bitmap bitmapCod = Bitmap.createBitmap(192, 94, Bitmap.Config.ARGB_8888);
+        final Bitmap bitmapCod = Bitmap.createBitmap(197, 120, Bitmap.Config.ARGB_8888);
         TextView editare = (TextView) findViewById(R.id.edit_title);
-        pozaProdus = (ImageView) findViewById(R.id.poza_button);
+        camera = (ImageView) findViewById(R.id.poza_button);
+        pozaProdus = (ImageView) findViewById(R.id.poza_produs);
         ImageView deleteProdus = (ImageView) findViewById(R.id.delete_button);
         // Inlatura view-urile pentru cod bare, pana cand va fi generat
         imagineCuCod.setVisibility(View.GONE);
@@ -103,6 +101,7 @@ public class EditorActivity extends AppCompatActivity implements
 
         numeProdus.setOnTouchListener(mTouchListener);
         codProdus.setOnTouchListener(mTouchListener);
+        camera.setOnTouchListener(mTouchListener);
         pozaProdus.setOnTouchListener(mTouchListener);
 
         // Buton de salvarealveaza
@@ -114,6 +113,12 @@ public class EditorActivity extends AppCompatActivity implements
             }
         });
         // Buton pentru poza
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
         pozaProdus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,9 +129,10 @@ public class EditorActivity extends AppCompatActivity implements
         deleteProdus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDeleteConfirmationDialog();
+                Toast.makeText(EditorActivity.this, "Functia inca nu e implementata", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
         ImageView buttonGenerateBarCode = (ImageView) findViewById(R.id.generate_button);
@@ -136,13 +142,18 @@ public class EditorActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 String codString = codProdus.getText().toString();
+                if (codString.length() < 1) {
+                    Toast.makeText(EditorActivity.this, "Nu ati introdus codul", Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
                 codString = codOK(codString);
 
                 // TODO
                 Canvas barcodeCanvas = new Canvas(bitmapCod);
                 Path path = new Path();
-                Paint paintAlb = new Paint();
-                paintAlb.setColor(getColor(R.color.secondaryColor));
+                Paint paint = new Paint();
+                paint.setColor(getColor(R.color.secondaryColor));
 
                 for (int i = 1; i < 96; i++) {
                     if (codString.charAt(i-1) == '1') {
@@ -152,7 +163,12 @@ public class EditorActivity extends AppCompatActivity implements
                     }
                 }
 
-                barcodeCanvas.drawPath(path, paintAlb);
+                barcodeCanvas.drawPath(path, paint);
+                paint.setTextSize((12));
+                barcodeCanvas.drawText(numeProdus.getText().toString(), 10, 100, paint);
+                paint.setColor(getColor(R.color.primaryColor));
+                paint.setTextSize(10);
+                barcodeCanvas.drawText("by CoffeeSoftware", 100, 110, paint);
 
                 ImageView img = (ImageView) findViewById(R.id.cod_image);
                 img.setImageBitmap(bitmapCod);
@@ -190,7 +206,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor == null || cursor.getCount() < 1) {
+        if (cursor == null || cursor.getCount() < 0) {
             return;
         }
 
@@ -351,36 +367,4 @@ public class EditorActivity extends AppCompatActivity implements
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    // Delete an item
-    private void deleteItem() {
-        if (mCurrentItemUri != null) {
-            int rowsDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
-            if (rowsDeleted == 0) {
-                Toast.makeText(this, getString(R.string.failed_to_delete), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
-            }
-        }
-        finish();
-    }
-
-    // Show delete dialog
-    private void showDeleteConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                deleteItem();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
 }

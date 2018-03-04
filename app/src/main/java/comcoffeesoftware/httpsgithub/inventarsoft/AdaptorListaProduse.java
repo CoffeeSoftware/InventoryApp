@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+
+import static comcoffeesoftware.httpsgithub.inventarsoft.EditorActivity.getImage;
+
 /**
  * Adaptor for the RecyclerView containing a list of our saved products
  */
@@ -39,10 +43,13 @@ public class AdaptorListaProduse extends CursorAdapter {
         // Extrage nume si cod
         String nume = cursor.getString(numeColumnIndex);
         String cod = cursor.getString(codColumnIndex);
+        byte[] imageByte = cursor.getBlob(imagineColumnIndex);
+
 
         // Ataseaza stringurile pentru nume si cod la TextView-urile corespunzatoare
         numeProdus.setText(nume);
         codProdus.setText(cod);
+        imagineProdus.setImageBitmap(getImage(imageByte));
 
         final LinearLayout editView = (LinearLayout) view.findViewById(R.id.edit_view);
         editView.setTag(cursor.getPosition());

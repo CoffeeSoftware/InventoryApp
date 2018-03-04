@@ -43,35 +43,4 @@ public class MyInventoryDBHelper extends SQLiteOpenHelper {
 
         onCreate(sqLiteDatabase);
     }
-
-//    public long insertEntry(String name, int cod) {
-//        SQLiteDatabase db = getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(DbContract.Produs.COLUMN_NAME, name);
-//        values.put(DbContract.Produs.COLUMN_COD, cod);
-//
-//        long rowId = db.insert(DbContract.Produs.TABLE_NAME, null, values);
-//        return rowId;
-//    }
-//
-//    public Cursor readEntry() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String[] projection = {
-//                DbContract.Produs._ID,
-//                DbContract.Produs.COLUMN_NAME,
-//                DbContract.Produs.COLUMN_COD
-//        };
-//
-//        Cursor cursor = db.query(
-//                DbContract.Produs.TABLE_NAME,
-//                projection,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//        return cursor;
-//    }
 }

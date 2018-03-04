@@ -3,6 +3,8 @@ package comcoffeesoftware.httpsgithub.inventarsoft;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +22,7 @@ public class ScanActivity extends AppCompatActivity {
 
 private static final int REQ_CODE_PERMISSION = 0x1111;
     private TextView tvResult;
+    TextView goToProdus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
                 openScanner();
           }
       });
+
+        goToProdus = (TextView) findViewById(R.id.goToProdus);
+        goToProdus.setVisibility(View.GONE);
     }
 
     private void openScanner() {
@@ -85,7 +91,9 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
             case CaptureActivity.REQ_CODE:
                 switch (resultCode) {
                     case RESULT_OK:
-                        tvResult.setText(data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT));  //or do sth
+                        String cod = data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT);
+                        tvResult.setText(cod);  //or do sth
+                        goToProdus.setText(cautaCodInDb(cod));
                         break;
                     case RESULT_CANCELED:
                         if (data != null) {
@@ -96,6 +104,19 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
                 }
                 break;
         }
+    }
+
+    private String cautaCodInDb(String cod) {
+        String name = "nu exista in DB";
+        MyInventoryDBHelper dbHelper = new MyInventoryDBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Cursor cursor = db.query(DbContract.Produs.TABLE_NAME, null, DbContract.Produs.COLUMN_COD + "=?", new String[] {cod}, null, null, null , null);
+
+      int numeColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_COD);
+
+
+        return name;
     }
 
 

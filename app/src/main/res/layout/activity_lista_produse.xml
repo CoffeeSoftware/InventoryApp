@@ -20,8 +20,8 @@
         app:srcCompat="@drawable/ic_library_plus_white_48dp"
         android:background="@color/secondaryColor"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lista_produse"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
