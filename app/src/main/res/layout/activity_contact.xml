@@ -52,7 +52,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             style="@style/StilPentruImagini"
-            android:src="@drawable/ic_stack_overflow_white_48dp"
+            android:src="@drawable/ic_coin_white_48dp"
             android:background="@color/primaryColor"/>
     </LinearLayout>
     <ImageView
