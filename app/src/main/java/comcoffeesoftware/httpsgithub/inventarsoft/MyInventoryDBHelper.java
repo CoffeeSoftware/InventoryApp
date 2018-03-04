@@ -12,9 +12,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyInventoryDBHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "journalEntries.db";
+    public static final String LOG_TAG = MyInventoryDBHelper.class.getSimpleName();
+    private static final String DATABASE_NAME = "inventory.db";
     private static final int DATABASE_VERSION = 1;
 
+    // Constructorul
     public MyInventoryDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -23,11 +25,11 @@ public class MyInventoryDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         final String SQL_CREATE_DATABASE = "CREATE TABLE " +
-                DbContract.Produse.TABLE_NAME + " (" +
-                DbContract.Produse._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                DbContract.Produse.COLUMN_NAME + " TEXT NOT NULL," +
-                DbContract.Produse.COLUMN_IMAGE + " BLOB," +
-                DbContract.Produse.COLUMN_COD + " INTEGER" +
+                DbContract.Produs.TABLE_NAME + " (" +
+                DbContract.Produs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                DbContract.Produs.COLUMN_NAME + " TEXT NOT NULL," +
+                DbContract.Produs.COLUMN_IMAGE + " BLOB," +
+                DbContract.Produs.COLUMN_COD + " INTEGER" +
                 ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_DATABASE);
@@ -37,39 +39,39 @@ public class MyInventoryDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DbContract.Produse.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DbContract.Produs.TABLE_NAME);
 
         onCreate(sqLiteDatabase);
     }
 
-    public long insertEntry(String name, int cod) {
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(DbContract.Produse.COLUMN_NAME, name);
-        values.put(DbContract.Produse.COLUMN_COD, cod);
-
-        long rowId = db.insert(DbContract.Produse.TABLE_NAME, null, values);
-        return rowId;
-    }
-
-    public Cursor readEntry() {
-        SQLiteDatabase db = getReadableDatabase();
-        String[] projection = {
-                DbContract.Produse._ID,
-                DbContract.Produse.COLUMN_NAME,
-                DbContract.Produse.COLUMN_COD
-        };
-
-        Cursor cursor = db.query(
-                DbContract.Produse.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-        return cursor;
-    }
+//    public long insertEntry(String name, int cod) {
+//        SQLiteDatabase db = getWritableDatabase();
+//
+//        ContentValues values = new ContentValues();
+//        values.put(DbContract.Produs.COLUMN_NAME, name);
+//        values.put(DbContract.Produs.COLUMN_COD, cod);
+//
+//        long rowId = db.insert(DbContract.Produs.TABLE_NAME, null, values);
+//        return rowId;
+//    }
+//
+//    public Cursor readEntry() {
+//        SQLiteDatabase db = getReadableDatabase();
+//        String[] projection = {
+//                DbContract.Produs._ID,
+//                DbContract.Produs.COLUMN_NAME,
+//                DbContract.Produs.COLUMN_COD
+//        };
+//
+//        Cursor cursor = db.query(
+//                DbContract.Produs.TABLE_NAME,
+//                projection,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
+//        return cursor;
+//    }
 }

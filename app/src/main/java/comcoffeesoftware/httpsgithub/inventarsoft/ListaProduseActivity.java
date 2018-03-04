@@ -1,22 +1,32 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 /**
- * Java class for Lista Produse Activity
+ * Java class for Lista Produs Activity
  */
 
-public class ListaProduseActivity extends AppCompatActivity implements AdaptorListaProduse.MyOnItemClickListener{
+public class ListaProduseActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static Context mContext;
+    // Loader identifier
+    private static final int ITEM_LOADER = 0;
+    // Create a cursor adapter
 
     private static final int numarProduse = 100;
 
@@ -29,18 +39,17 @@ public class ListaProduseActivity extends AppCompatActivity implements AdaptorLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_produse);
 
-        final MyInventoryDBHelper mHelper = new MyInventoryDBHelper(this);
-        myData = mHelper.getWritableDatabase();
+        mContext = this;
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.lista_produse);
+        // TODO Find and set a empty view
 
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
+        ListView listView = (ListView) findViewById(R.id.list);
 
-        mAdaptorListaProduse = new AdaptorListaProduse(getEntries(), this);
+        mAdaptorListaProduse = new AdaptorListaProduse(this, null);
 
-        mRecyclerView.setAdapter(mAdaptorListaProduse);
+        listView.setAdapter(mAdaptorListaProduse);
+
+        getLoaderManager().initLoader(ITEM_LOADER, null, this);
 
 
         FloatingActionButton butonAdd = (FloatingActionButton) findViewById(R.id.add);
@@ -50,24 +59,40 @@ public class ListaProduseActivity extends AppCompatActivity implements AdaptorLi
                 startActivity(new Intent(ListaProduseActivity.this, EditorActivity.class));
             }
         });
+
+        // TODO Add delete button
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        // Define the projection
+        String[] projection = {
+                DbContract.Produs._ID,
+                DbContract.Produs.COLUMN_NAME,
+                DbContract.Produs.COLUMN_COD,
+                DbContract.Produs.COLUMN_IMAGE
+        };
+
+        // Query on background
+        return new CursorLoader(this, DbContract.Produs.CONTENT_URI, projection, null, null, null);
+
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(this, "produs nr. "+ clickedItemIndex, Toast.LENGTH_SHORT).show();
-
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        mAdaptorListaProduse.swapCursor(cursor);
     }
 
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdaptorListaProduse.swapCursor(null);
+    }
 
-    private Cursor getEntries() {
-        return myData.query(
-                DbContract.Produse.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DbContract.Produse._ID + " DESC"// Order by column
-        );
+    public static void goToEditor(int id) {
+        Intent intent = new Intent(mContext, EditorActivity.class);
+        Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
+        intent.setData(currentUri);
+        mContext.startActivity(intent);
     }
 }
