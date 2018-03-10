@@ -2,6 +2,7 @@ package comcoffeesoftware.httpsgithub.inventarsoft;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class AdaptorListaProduse extends CursorAdapter {
         int numeColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_NAME);
         int codColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_COD);
         int imagineColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_IMAGE);
+        int idColumnIndex = cursor.getColumnIndex(DbContract.Produs._ID);
 
         // Extrage nume si cod
         String nume = cursor.getString(numeColumnIndex);
@@ -52,13 +54,14 @@ public class AdaptorListaProduse extends CursorAdapter {
         imagineProdus.setImageBitmap(getImage(imageByte));
 
         final LinearLayout editView = (LinearLayout) view.findViewById(R.id.edit_view);
-        editView.setTag(cursor.getPosition());
+        editView.setTag(cursor.getInt(idColumnIndex));
         editView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Do when Edit Item is pressed
-                ListaProduseActivity.goToEditor(((Integer) editView.getTag()) + 1);
+                ListaProduseActivity.goToEditor(((Integer) editView.getTag()));
             }
         });
     }
+
 }

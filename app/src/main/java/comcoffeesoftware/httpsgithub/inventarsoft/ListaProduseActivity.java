@@ -1,9 +1,11 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -12,10 +14,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Java class for Lista Produs Activity
@@ -60,7 +62,14 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
-        // TODO Add delete button
+        // Find the delete text view that will delete all items, and set an onClickListener
+        FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete_all_button);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteAllConfirmationDialog();
+            }
+        });
     }
 
 
@@ -94,5 +103,35 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
         Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
         intent.setData(currentUri);
         mContext.startActivity(intent);
+    }
+
+    // Show delete all dialog
+    private void showDeleteAllConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_dialog);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteAll();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // Delete all items
+    private void deleteAll() {
+        int rowsDeleted = getContentResolver().delete(DbContract.Produs.CONTENT_URI, null, null);
+        if (rowsDeleted == 0) {
+            Toast.makeText(this, getString(R.string.failed_to_delete_all), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.successfully_deleted_all), Toast.LENGTH_SHORT).show();
+        }
     }
 }

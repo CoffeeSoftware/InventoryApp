@@ -6,7 +6,16 @@ package comcoffeesoftware.httpsgithub.inventarsoft;
 
 public class GeneratorCodBare {
 
-    public static String codOK(String stringCod) {
+    public static String codCompletBinarizat(String stringCod) {
+
+        stringCod = codCompletNebinarizat(stringCod);
+        stringCod = binarizare(stringCod);
+
+        return stringCod;
+    }
+
+    public static String codCompletNebinarizat (String stringCod) {
+        String codComplet;
         if (stringCod == null || stringCod.isEmpty()) return "NU_EXISTA_STRING";
         int length = stringCod.length();
         if (length > 9) return "STRING_PREA_LUNG";
@@ -16,8 +25,6 @@ public class GeneratorCodBare {
 
         stringCod = 594 + stringCod;
         stringCod = stringCod + obtineCifraControl(stringCod);
-        stringCod = binarizare(stringCod);
-
         return stringCod;
     }
 

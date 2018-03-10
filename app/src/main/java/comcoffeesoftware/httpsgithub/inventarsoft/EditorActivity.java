@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -35,7 +34,8 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 
 import static android.graphics.Path.Direction.CW;
-import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codOK;
+import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codCompletBinarizat;
+import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codCompletNebinarizat;
 
 /**
  * Java class for Editor Activity
@@ -130,6 +130,7 @@ public class EditorActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Toast.makeText(EditorActivity.this, "Functia inca nu e implementata", Toast.LENGTH_SHORT).show();
+                showDeleteConfirmationDialog();
             }
         });
 
@@ -147,7 +148,7 @@ public class EditorActivity extends AppCompatActivity implements
                     return;
 
                 }
-                codString = codOK(codString);
+                codString = codCompletBinarizat(codString);
 
                 // TODO
                 Canvas barcodeCanvas = new Canvas(bitmapCod);
@@ -235,6 +236,9 @@ public class EditorActivity extends AppCompatActivity implements
     private void saveProdus() {
         // Get input values
         String name = numeProdus.getText().toString().trim();
+        String cod = codProdus.getText().toString();
+        String codComplet = codCompletNebinarizat(cod);
+
         ImageView imageView = (ImageView) findViewById(R.id.poza_produs);
         // If no name was introduced, do not save
         if (mCurrentItemUri == null && (TextUtils.isEmpty(name) || (TextUtils.isEmpty(codProdus.getText())) || (imageView.getDrawable() == null))) {
@@ -242,10 +246,10 @@ public class EditorActivity extends AppCompatActivity implements
             return;
         }
 
-
         ContentValues values = new ContentValues();
         values.put(DbContract.Produs.COLUMN_NAME, name);
-        values.put(DbContract.Produs.COLUMN_COD, codProdus.getText().toString());
+        values.put(DbContract.Produs.COLUMN_COD, cod);
+        values.put(DbContract.Produs.COLUMN_COD_COMPLET, codComplet);
 
         // Convert the image from the image view to bitmap, convert to byte and put it in our content values
         Bitmap mBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -366,5 +370,35 @@ public class EditorActivity extends AppCompatActivity implements
         };
         showUnsavedChangesDialog(discardButtonClickListener);
     }
-
+    // Show delete dialog
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteItem();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    // Delete an item
+    private void deleteItem() {
+        if (mCurrentItemUri != null) {
+            int rowsDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
+            if (rowsDeleted == 0) {
+                Toast.makeText(this, getString(R.string.failed_to_delete), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
+            }
+        }
+        finish();
+    }
 }

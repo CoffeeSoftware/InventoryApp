@@ -24,4 +24,7 @@
     <string name="delete">Sterge</string>
     <string name="cancel">Renunta</string>
     <string name="go_to_produs">Mergi la produs</string>
+    <string name="delete_all_dialog">Do you want to delete the entire list of products?</string>
+    <string name="failed_to_delete_all">Failed to delete all products.</string>
+    <string name="successfully_deleted_all">All products were succesfully deleted.</string>
 </resources>

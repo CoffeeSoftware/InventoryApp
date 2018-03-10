@@ -29,5 +29,6 @@ public class DbContract {
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_IMAGE = "Imagine";
         public static final String COLUMN_COD = "Cod";
+        public static final String COLUMN_COD_COMPLET = "CodComplet";
     }
 }

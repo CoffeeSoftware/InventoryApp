@@ -1,10 +1,14 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
 import android.Manifest;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,11 +27,15 @@ public class ScanActivity extends AppCompatActivity {
 private static final int REQ_CODE_PERMISSION = 0x1111;
     private TextView tvResult;
     TextView goToProdus;
+    private static Context mContext;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        id = -99;
+        mContext = this;
         tvResult = (TextView) findViewById(R.id.tv_result);
         ImageView btn = (ImageView) findViewById(R.id.scan_button);
         openScanner();
@@ -40,6 +48,18 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
 
         goToProdus = (TextView) findViewById(R.id.goToProdus);
         goToProdus.setVisibility(View.GONE);
+        goToProdus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (goToProdus.getText().toString() != null && goToProdus.getText().toString() != "nu exista in DB" && id != -99) {
+                    Intent intent = new Intent(mContext, EditorActivity.class);
+                    Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
+                    intent.setData(currentUri);
+                    mContext.startActivity(intent);
+                } else Toast.makeText(ScanActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     private void openScanner() {
@@ -109,15 +129,24 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
     private String cautaCodInDb(String cod) {
         String name = "nu exista in DB";
         MyInventoryDBHelper dbHelper = new MyInventoryDBHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        Cursor cursor = db.query(DbContract.Produs.TABLE_NAME, null, DbContract.Produs.COLUMN_COD + "=?", new String[] {cod}, null, null, null , null);
-
-      int numeColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_COD);
-
-
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(DbContract.Produs.TABLE_NAME, new String[] { DbContract.Produs._ID, DbContract.Produs.COLUMN_COD, DbContract.Produs.COLUMN_NAME }, DbContract.Produs.COLUMN_COD_COMPLET + "=?", new String[] {cod}, null, null, null , null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int nameColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_NAME);
+            name = cursor.getString(nameColumnIndex);
+            int idColumnIndex = cursor.getColumnIndex(DbContract.Produs._ID);
+            id = cursor.getInt(idColumnIndex);
+        }
+        } catch (Exception e) {
+            Toast.makeText(mContext, "not Found", Toast.LENGTH_SHORT).show();
+        }
+        goToProdus.setVisibility(View.VISIBLE);
         return name;
     }
+
 
 
 }
