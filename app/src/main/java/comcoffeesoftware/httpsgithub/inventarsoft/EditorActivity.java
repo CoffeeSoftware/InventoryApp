@@ -38,21 +38,21 @@ import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codCom
 import static comcoffeesoftware.httpsgithub.inventarsoft.GeneratorCodBare.codCompletNebinarizat;
 
 /**
- * Java class for Editor Activity
+ * Clasa JAVA pentru Editor Activity
  */
 
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    // Loader identifier
-    private static final int EXISTING_ITEM_LOADER = 0;
-    // Current item URI
-    private Uri mCurrentItemUri;
-
-    private boolean mItemChanged = false;
-
+    // Constanta pentru permisiune declansare camera
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    // ID constant pentru Loader
+    private static final int EXISTING_ITEM_LOADER = 0;
+    // URI pentru obiectul curent
+    private Uri mCurrentItemUri;
+    // Variabila care tine socoteala daca s-au editat campuri
+    private boolean mItemChanged = false;
+    // Variabile pentru parti din layout care pot fi atinse
     private EditText numeProdus;
     private EditText codProdus;
     private ImageView camera;
@@ -67,31 +67,45 @@ public class EditorActivity extends AppCompatActivity implements
         }
     };
 
+    // Functie pentru transformarea din byte in bitmap
+    public static byte[] getByte(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // Functie pentru transformarea din bitmap in byte
+    public static Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    // Functia onCreate ruleaza cand e creata activitatea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Seteaza layout-ul corespunzator activitatii
         setContentView(R.layout.activity_editor);
 
+        // Extrage datele cu care s-a initiat activitatea de editare
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
 
-
-
         // Gaseste View-urile editabile
-        numeProdus = (EditText) findViewById(R.id.Camp_nume);
-        codProdus=(EditText) findViewById(R.id.Camp_Cod);
-        final ImageView imagineCuCod = (ImageView) findViewById(R.id.cod_image);
-        final FrameLayout frameLayoutCod = (FrameLayout) findViewById(R.id.frame_cod);
+        numeProdus = findViewById(R.id.Camp_nume);
+        codProdus = findViewById(R.id.Camp_Cod);
+        final ImageView imagineCuCod = findViewById(R.id.cod_image);
+        final FrameLayout frameLayoutCod = findViewById(R.id.frame_cod);
         final Bitmap bitmapCod = Bitmap.createBitmap(197, 120, Bitmap.Config.ARGB_8888);
-        TextView editare = (TextView) findViewById(R.id.edit_title);
-        camera = (ImageView) findViewById(R.id.poza_button);
-        pozaProdus = (ImageView) findViewById(R.id.poza_produs);
-        ImageView deleteProdus = (ImageView) findViewById(R.id.delete_button);
+        TextView editare = findViewById(R.id.edit_title);
+        camera = findViewById(R.id.poza_button);
+        pozaProdus = findViewById(R.id.poza_produs);
+        ImageView deleteProdus = findViewById(R.id.delete_button);
+
         // Inlatura view-urile pentru cod bare, pana cand va fi generat
         imagineCuCod.setVisibility(View.GONE);
         frameLayoutCod.setVisibility(View.GONE);
 
-        // Check if we are editing an existing row or adding a new one
+        // Verifica daca editam un produs existent sau daca adaugam unul nou
         if (mCurrentItemUri == null) {
             editare.setText(getString(R.string.new_item));
         } else {
@@ -99,19 +113,21 @@ public class EditorActivity extends AppCompatActivity implements
             getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
         }
 
+        // Asculta pentru a stii daca s-a editat ceva
         numeProdus.setOnTouchListener(mTouchListener);
         codProdus.setOnTouchListener(mTouchListener);
         camera.setOnTouchListener(mTouchListener);
         pozaProdus.setOnTouchListener(mTouchListener);
 
-        // Buton de salvarealveaza
-        ImageView buttonSave = (ImageView) findViewById(R.id.save_button_produs);
+        // Buton de salveaza
+        ImageView buttonSave = findViewById(R.id.save_button_produs);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveProdus();
             }
         });
+
         // Buton pentru poza
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,66 +141,75 @@ public class EditorActivity extends AppCompatActivity implements
                 dispatchTakePictureIntent();
             }
         });
+
         // Dialog pentru stergere
         deleteProdus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EditorActivity.this, "Functia inca nu e implementata", Toast.LENGTH_SHORT).show();
                 showDeleteConfirmationDialog();
             }
         });
 
-
-
-        ImageView buttonGenerateBarCode = (ImageView) findViewById(R.id.generate_button);
+        // Buton pentru generarea codului de bare
+        ImageView buttonGenerateBarCode = findViewById(R.id.generate_button);
         buttonGenerateBarCode.setOnClickListener(new View.OnClickListener() {
 
             @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
+                // Extrage String din campul cu codul produsului
                 String codString = codProdus.getText().toString();
+                // Verifica sa avem un cod mai lung de 0 caractere
                 if (codString.length() < 1) {
-                    Toast.makeText(EditorActivity.this, "Nu ati introdus codul", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditorActivity.this, getString(R.string.no_code), Toast.LENGTH_SHORT).show();
                     return;
-
                 }
+
+                // Invoca functia care transforma codul introdus in cod de bare EAN13 in format binar
                 codString = codCompletBinarizat(codString);
 
-                // TODO
+                // Creare bitmap desenat cu codul de bare, numele produsului si semnatura
                 Canvas barcodeCanvas = new Canvas(bitmapCod);
                 Path path = new Path();
                 Paint paint = new Paint();
                 paint.setColor(getColor(R.color.secondaryColor));
 
+                // Pentru fiecare 1 din codul EAN13 binar se traseaza o linie
                 for (int i = 1; i < 96; i++) {
-                    if (codString.charAt(i-1) == '1') {
+                    if (codString.charAt(i - 1) == '1') {
                         int bottom = 80;
-                        if ((i < 4) || (i == 46) || (i == 47) || (i == 48) || (i == 49) || (i == 50) || (i > 92)) bottom += 10;
+                        // Barele de control sunt cu 10 pixeli mai lungi in partea de jos
+                        if ((i < 4) || (i == 46) || (i == 47) || (i == 48) || (i == 49) || (i == 50) || (i > 92))
+                            bottom += 10;
                         path.addRect(i * 2 - 2, 10, i * 2, bottom, CW);
                     }
                 }
-
+                // Deseneaza barele pe bitmap
                 barcodeCanvas.drawPath(path, paint);
+
+                // Deseneaza numele produsului
                 paint.setTextSize((12));
-                barcodeCanvas.drawText(numeProdus.getText().toString(), 10, 100, paint);
+                barcodeCanvas.drawText(numeProdus.getText().toString(), 10, 110, paint);
+                // Deseneaza o semnatura
                 paint.setColor(getColor(R.color.primaryColor));
                 paint.setTextSize(10);
                 barcodeCanvas.drawText("by CoffeeSoftware", 100, 110, paint);
 
-                ImageView img = (ImageView) findViewById(R.id.cod_image);
+                // Ataseaza bitmap-ul generat la ImageView-ul cu id cod_imagine din activity_editor.xml si-l face vizibil
+                ImageView img = findViewById(R.id.cod_image);
                 img.setImageBitmap(bitmapCod);
                 frameLayoutCod.setVisibility(View.VISIBLE);
                 imagineCuCod.setVisibility(View.VISIBLE);
-
-
             }
         });
 
-        ImageView butonPrinteza = (ImageView) findViewById(R.id.print_button);
+        // Atingere buton de print
+        ImageView butonPrinteza = findViewById(R.id.print_button);
         butonPrinteza.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                // Printeaza bitmap-ul generat
                 PrintHelper printHelper = new PrintHelper(EditorActivity.this);
                 printHelper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
                 printHelper.printBitmap("printare Cod", bitmapCod);
@@ -192,75 +217,85 @@ public class EditorActivity extends AppCompatActivity implements
         });
     }
 
+    // Creare cursor cand e creat Loader-ul
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Define the projection
+        // Definirea proiectiei cursorului
         String[] projection = {
                 DbContract.Produs._ID,
                 DbContract.Produs.COLUMN_NAME,
                 DbContract.Produs.COLUMN_COD,
                 DbContract.Produs.COLUMN_IMAGE};
 
-        // Query on background
+        // Cauta in baza de date in background
         return new CursorLoader(this, mCurrentItemUri, projection, null, null, null);
     }
 
+    // Setare valori pentru campuri la finalul incarcarii Loader-ului
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        // Daca cursorul e gol, nu se mai seteaza valori la campurile din layout
         if (cursor == null || cursor.getCount() < 0) {
             return;
         }
 
         if (cursor.moveToFirst()) {
-            // Get column indexes
+            // Returneaza indexul coloanelor
             int nameColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_NAME);
             int codColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_COD);
             int imageColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_IMAGE);
-            // Extract string, integers and blob
+
+            // Extrage date (string, integer si blob pentru imagine)
             String name = cursor.getString(nameColumnIndex);
             String cod = cursor.getString(codColumnIndex);
             byte[] imageByte = cursor.getBlob(imageColumnIndex);
-            // Update the views
+
+            // Updatare Layout cu datele extrase
             numeProdus.setText(name);
             codProdus.setText(cod);
             pozaProdus.setImageBitmap(getImage(imageByte));
         }
     }
 
+    // Resetare Layout la resetarea loaderului
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         numeProdus.setText("");
         codProdus.setText("");
     }
 
+    // Functie pentru salvarea unui produs in baza de date
     private void saveProdus() {
-        // Get input values
+        // Extrage datele introduse
         String name = numeProdus.getText().toString().trim();
         String cod = codProdus.getText().toString();
         String codComplet = codCompletNebinarizat(cod);
 
-        ImageView imageView = (ImageView) findViewById(R.id.poza_produs);
-        // If no name was introduced, do not save
+        ImageView imageView = findViewById(R.id.poza_produs);
+        // Daca nu avem nume, cod si imagine, nu se salveaza
         if (mCurrentItemUri == null && (TextUtils.isEmpty(name) || (TextUtils.isEmpty(codProdus.getText())) || (imageView.getDrawable() == null))) {
             Toast.makeText(this, getString(R.string.missing_data), Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Colectarea valorilor care vor fi salvate
         ContentValues values = new ContentValues();
         values.put(DbContract.Produs.COLUMN_NAME, name);
         values.put(DbContract.Produs.COLUMN_COD, cod);
         values.put(DbContract.Produs.COLUMN_COD_COMPLET, codComplet);
 
-        // Convert the image from the image view to bitmap, convert to byte and put it in our content values
+        // Converteste in bitmap imaginea produsului afisata in layout
         Bitmap mBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         if (mBitmap != null) {
+            // Converteste bitmap-ul in byte si il adauga la valorile ce vor fi salvate
             values.put(DbContract.Produs.COLUMN_IMAGE, getByte(mBitmap));
         }
 
-        // Check if it is a new item or if we are editing an existing item
+        // Verifica daca editam un produs existent sau daca adaugam unul nou
         if (mCurrentItemUri == null) {
+            // Salveaza produs nou
             Uri newUri = getContentResolver().insert(DbContract.Produs.CONTENT_URI, values);
-            // Verify if item was inserted
+            // Verifica daca produsul nou a fost adaugat
             if (newUri == null) {
                 Toast.makeText(this, getString(R.string.insertion_failed), Toast.LENGTH_SHORT).show();
             } else {
@@ -268,8 +303,9 @@ public class EditorActivity extends AppCompatActivity implements
                 finish();
             }
         } else {
+            // Salveaza editarile facute unui produs existent
             int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
-            // Verify if the update was successful
+            // Verifica daca editarile s-au salvat cu succes
             if (rowsAffected == 0) {
                 Toast.makeText(this, getString(R.string.update_failed), Toast.LENGTH_SHORT).show();
             } else {
@@ -279,64 +315,54 @@ public class EditorActivity extends AppCompatActivity implements
         }
     }
 
-    // For taking a photo
+    // Functie pentru deschiderea camerei
     private void dispatchTakePictureIntent() {
         // Daca e o versiune mai noua de Mashmalow trebuie sa cerem permisiune
-        if( ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{android.Manifest.permission.CAMERA},
                         5);
             }
         } else
-            // Daca e versiune mai veche decat Marshmalow deschidem camera
-            {
+        // Daca e versiune mai veche decat Marshmalow deschidem camera
+        {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
+
     // Daca primim permisiune deschidem camera
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            if (requestCode == 5) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                    } else {
-                        Toast.makeText(this, "Nu avem permisiune sa folosim camera", Toast.LENGTH_SHORT).show();
-                    }
+        if (requestCode == 5) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(this, R.string.camera_permision_denied, Toast.LENGTH_SHORT).show();
                 }
-
             }
+
+        }
     }
 
-    // Get the thumbnail of the photo
+    // Primim poza
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
+            // Convertim imaginea primita in bitmap si o setam la layout-ul corespunzator
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView mImageView = (ImageView) findViewById(R.id.poza_produs);
+            ImageView mImageView = findViewById(R.id.poza_produs);
             mImageView.setImageBitmap(imageBitmap);
         }
     }
 
-    // Get byte from bitmap
-    public static byte[] getByte(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        return stream.toByteArray();
-    }
-
-    // Get bitmap from byte
-    public static Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
-
-    // Create dialog to prevent from accidentally exiting without saving
+    // Creare dialog pentru a preveni iesirea accidentala fara salvare
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -350,12 +376,12 @@ public class EditorActivity extends AppCompatActivity implements
             }
         });
 
-        // Create and show the AlertDialog
+        // Afiseaza dialogul
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    // When touching back, verify if changes were made and make the dialog if necessary
+    // Cand se apasa butonul Back, verifica daca s-au facut editari si afiseaza un dialog daca e necesar
     @Override
     public void onBackPressed() {
         if (!mItemChanged) {
@@ -370,9 +396,11 @@ public class EditorActivity extends AppCompatActivity implements
         };
         showUnsavedChangesDialog(discardButtonClickListener);
     }
-    // Show delete dialog
+
+    // Dialog pentru confirmarea stergerii
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_plus_circle_outline_white_48dp);
         builder.setMessage(R.string.delete_dialog);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -389,7 +417,8 @@ public class EditorActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    // Delete an item
+
+    // Sterge un produs
     private void deleteItem() {
         if (mCurrentItemUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentItemUri, null, null);

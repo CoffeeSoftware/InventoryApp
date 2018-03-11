@@ -9,52 +9,57 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 /**
- * Java class for Lista Produs Activity
+ * Clasa JAVA pentru Activitatea Lista Produse
  */
 
 public class ListaProduseActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static Context mContext;
-    // Loader identifier
+    // Constanta cu id pentru Loader
     private static final int ITEM_LOADER = 0;
-    // Create a cursor adapter
-
-    private static final int numarProduse = 100;
-
+    // Context pentru referinta in functiile de mai jos
+    private static Context mContext;
+    // Creare adaptor pentru cursor
     private AdaptorListaProduse mAdaptorListaProduse;
-    private RecyclerView mRecyclerView;
-    private SQLiteDatabase myData;
 
+    // Trimitere la Activitatea de Editare cu un URI care indica produsul care va fi editat
+    public static void goToEditor(int id) {
+        Intent intent = new Intent(mContext, EditorActivity.class);
+        Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
+        intent.setData(currentUri);
+        mContext.startActivity(intent);
+    }
+
+    // Functia onCreate ruleaza cand e creata activitatea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Seteaza layout-ul corespunzator activitatii
         setContentView(R.layout.activity_lista_produse);
 
+        // Initierea variabilei mContext
         mContext = this;
 
-        // TODO Find and set a empty view
+        // Creare obiect ListView si initializare cu ListView-ul cu id=List din activity_lista_produse.xml
+        ListView listView = findViewById(R.id.list);
 
-        ListView listView = (ListView) findViewById(R.id.list);
-
+        // Initializare adaptor
         mAdaptorListaProduse = new AdaptorListaProduse(this, null);
-
+        // Setare adaptor la ListView
         listView.setAdapter(mAdaptorListaProduse);
-
+        // Initializare Loader
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
 
-
-        FloatingActionButton butonAdd = (FloatingActionButton) findViewById(R.id.add);
+        // Buton pentru adaugare
+        FloatingActionButton butonAdd = findViewById(R.id.add);
         butonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,8 +67,8 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
-        // Find the delete text view that will delete all items, and set an onClickListener
-        FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete_all_button);
+        // Buton pentru stergerea intregii liste de produse
+        FloatingActionButton delete = findViewById(R.id.delete_all_button);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,10 +77,10 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
         });
     }
 
-
+    // Creare cursor cand e creat Loader-ul
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Define the projection
+        // Definirea proiectiei cursorului
         String[] projection = {
                 DbContract.Produs._ID,
                 DbContract.Produs.COLUMN_NAME,
@@ -83,29 +88,24 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
                 DbContract.Produs.COLUMN_IMAGE
         };
 
-        // Query on background
+        // Cauta in baza de date in background
         return new CursorLoader(this, DbContract.Produs.CONTENT_URI, projection, null, null, null);
 
     }
 
+    // Resetarea adaptorului cu cursorul nou la finalul incarcarii Loader-ului
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         mAdaptorListaProduse.swapCursor(cursor);
     }
 
+    // Resetarea adaptorului fara cursor la Resetarea Loaderului
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdaptorListaProduse.swapCursor(null);
     }
 
-    public static void goToEditor(int id) {
-        Intent intent = new Intent(mContext, EditorActivity.class);
-        Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
-        intent.setData(currentUri);
-        mContext.startActivity(intent);
-    }
-
-    // Show delete all dialog
+    // Afiseaza dialog pentru stergerea tuturor produselor
     private void showDeleteAllConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_all_dialog);
@@ -125,7 +125,7 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
         alertDialog.show();
     }
 
-    // Delete all items
+    // Sterge toate produsele
     private void deleteAll() {
         int rowsDeleted = getContentResolver().delete(DbContract.Produs.CONTENT_URI, null, null);
         if (rowsDeleted == 0) {

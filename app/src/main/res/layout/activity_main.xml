@@ -1,51 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.MainActivity"
-    android:orientation="vertical">
+    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.MainActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/touch_feedback2"
+        android:backgroundTint="@color/colorAccent"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_help" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1">
-        <ImageView
-            android:id="@+id/imagine_scanare"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:background="@color/secondaryColor"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_barcode_scan_white_48dp" />
-        <ImageView
-            android:id="@+id/imagine_lista_produse"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_server_white_48dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center">
-        <ImageView
-            android:id="@+id/imagine_cont"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_account_settings_variant_white_48dp"
-            android:background="@color/secondaryDarkColor"/>
-        <ImageView
-            android:id="@+id/imagine_contact"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_message_text_outline_white_48dp"
-            android:background="@color/primaryColor"/>
-    </LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imagine_scanare"
+                style="@style/StilPentruImagini"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/touch_feedback"
+                android:src="@drawable/ic_barcode_scan_white_48dp" />
+
+
+            <ImageView
+                android:id="@+id/imagine_lista_produse"
+                style="@style/StilPentruImagini"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/touch_feedback"
+                android:src="@drawable/ic_server_white_48dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imagine_cont"
+                style="@style/StilPentruImagini"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/touch_feedback"
+                android:src="@drawable/ic_account_settings_variant_white_48dp" />
+
+            <ImageView
+                android:id="@+id/imagine_contact"
+                style="@style/StilPentruImagini"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/touch_feedback"
+                android:src="@drawable/ic_message_text_outline_white_48dp" />
+        </LinearLayout>
 </LinearLayout>
+</android.support.constraint.ConstraintLayout>

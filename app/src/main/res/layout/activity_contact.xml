@@ -1,67 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.ContactActivity"
+    android:gravity="center"
     android:orientation="vertical"
-    android:gravity="center">
+    tools:context="comcoffeesoftware.httpsgithub.inventarsoft.ContactActivity">
+
     <ImageView
         android:id="@+id/email"
+        style="@style/StilPentruImagini"
         android:layout_width="192dp"
         android:layout_height="80dp"
-        style="@style/StilPentruImagini"
-        android:background="@color/primaryColor"
-        android:src="@drawable/ic_at_white_48dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@drawable/touch_feedback"
+        android:src="@drawable/ic_at_white_48dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="110dp"
         android:layout_gravity="center">
+
         <ImageView
-            android:id="@+id/SMS"
+            android:id="@+id/sms"
+            style="@style/StilPentruImagini"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_forum_white_48dp"
-            android:background="@color/primaryColor"/>
+            android:background="@drawable/touch_feedback"
+            android:src="@drawable/ic_forum_white_48dp" />
+
         <ImageView
-            android:id="@+id/Telefon"
+            android:id="@+id/telefon"
+            style="@style/StilPentruImagini"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_phone_in_talk_white_48dp"
-            android:background="@color/primaryColor"/>
+            android:background="@drawable/touch_feedback"
+            android:src="@drawable/ic_phone_in_talk_white_48dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="110dp"
         android:layout_gravity="center">
+
         <ImageView
-            android:id="@+id/Adresa_Facebook"
+            android:id="@+id/adresa_facebook"
+            style="@style/StilPentruImagini"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_facebook_white_48dp"
-            android:background="@color/primaryColor"/>
+            android:background="@drawable/touch_feedback"
+            android:src="@drawable/ic_facebook_white_48dp" />
+
         <ImageView
             android:id="@+id/Donatii"
+            style="@style/StilPentruImagini"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            style="@style/StilPentruImagini"
-            android:src="@drawable/ic_coin_white_48dp"
-            android:background="@color/primaryColor"/>
+            android:background="@drawable/touch_feedback"
+            android:src="@drawable/ic_coin_white_48dp" />
     </LinearLayout>
+
     <ImageView
-        android:id="@+id/Whats_Up"
+        android:id="@+id/whatsapp"
+        style="@style/StilPentruImagini"
         android:layout_width="192dp"
         android:layout_height="80dp"
-        style="@style/StilPentruImagini"
-        android:src="@drawable/ic_whatsapp_white_48dp"
         android:layout_gravity="center"
-        android:background="@color/primaryColor"/>
+        android:background="@drawable/touch_feedback"
+        android:src="@drawable/ic_whatsapp_white_48dp" />
 
 </LinearLayout>

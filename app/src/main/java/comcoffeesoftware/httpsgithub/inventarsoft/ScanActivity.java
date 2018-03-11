@@ -4,74 +4,94 @@ import android.Manifest;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.acker.simplezxing.activity.CaptureActivity;
 
+/**
+ * Clasa Java pentru Activitatea de Scanare
+ */
 public class ScanActivity extends AppCompatActivity {
 
-
-private static final int REQ_CODE_PERMISSION = 0x1111;
-    private TextView tvResult;
-    TextView goToProdus;
+    // Declararea variabilelor si constantelor folosite in aceasta clasa
+    private static final int REQ_CODE_PERMISSION = 0x1111;
     private static Context mContext;
+    Button goToProdus;
     int id;
+    private TextView tvResult;
 
+    // Functia onCreate ruleaza cand e creata activitatea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Seteaza layout-ul corespunzator activitatii
         setContentView(R.layout.activity_scan);
+        // Blocarea orientarii ecranului pe pozitia Portret pentru a impiedica recrearea activitatii
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        // Crearea unei variabile id initializata cu -99 care va contine id-ul din baza de date pentru produsul scanat
         id = -99;
+        // Initializare context
         mContext = this;
-        tvResult = (TextView) findViewById(R.id.tv_result);
-        ImageView btn = (ImageView) findViewById(R.id.scan_button);
+        // Initializare obiecte pentru TextView-ul cu codul scanat si pentru Butonul cu numele produsului scanat -- setate cu vizibilitate GONE (=-8)
+        tvResult = findViewById(R.id.tv_result);
+        tvResult.setVisibility(View.GONE);
+        ImageView btn = findViewById(R.id.scan_button);
+        // Initializare scanare la pornirea activitatii
         openScanner();
+
+        // Butonul care va avea ca text numele produsului scanat sau mesaj care spune ca nu exista in baza de date si care va trimite la produsul scanat daca exista
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openScanner();
-          }
-      });
-
-        goToProdus = (TextView) findViewById(R.id.goToProdus);
+            }
+        });
+        goToProdus = findViewById(R.id.goToProdus);
         goToProdus.setVisibility(View.GONE);
         goToProdus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (goToProdus.getText().toString() != null && goToProdus.getText().toString() != "nu exista in DB" && id != -99) {
+                if (goToProdus.getText().toString() != null && goToProdus.getText().toString() != getString(R.string.not_found) && id != -99) {
+                    // Trimitere la activitatea de editare pentru produsul scanat
                     Intent intent = new Intent(mContext, EditorActivity.class);
                     Uri currentUri = ContentUris.withAppendedId(DbContract.Produs.CONTENT_URI, id);
                     intent.setData(currentUri);
                     mContext.startActivity(intent);
-                } else Toast.makeText(ScanActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
+                }
+                // Mesaj daca codul scanat nu corespunde unui produs existent in baza de date
+                else
+                    Toast.makeText(ScanActivity.this, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
+    // Deschidere scanner
     private void openScanner() {
         if (ContextCompat.checkSelfPermission(ScanActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // Do not have the permission of camera, request it.
+            // Daca nu avem permisiune sa folosim camera, o cerem
             ActivityCompat.requestPermissions(ScanActivity.this, new String[]{Manifest.permission.CAMERA}, REQ_CODE_PERMISSION);
         } else {
-            // Have gotten the permission
+            // Daca avem permisiunea, scanam
             startCaptureActivityForResult();
         }
     }
 
+    // Scanam codul folosind libraria simplezxing
     private void startCaptureActivityForResult() {
         Intent intent = new Intent(ScanActivity.this, CaptureActivity.class);
         Bundle bundle = new Bundle();
@@ -86,24 +106,25 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
         startActivityForResult(intent, CaptureActivity.REQ_CODE);
     }
 
+    // Functie executata dupa ce se cere permisiunea pentru utilizarea camerei
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQ_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // User agree the permission
+                    // Utilizatorul a acordat permisiunea utilizarii camerei
                     startCaptureActivityForResult();
                 } else {
-                    // User disagree the permission
-                    Toast.makeText(this, "Trebuie sa dai permisiunea de folosire a camerei", Toast.LENGTH_LONG).show();
+                    // Utilizatorul nu a acordat permisiunea utilizarii camerei
+                    Toast.makeText(this, getString(R.string.camera_permission_ask), Toast.LENGTH_LONG).show();
                 }
             }
             break;
         }
     }
 
-
+    // Functia se executa la primirea rezultatelor scanarii
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -111,13 +132,15 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
             case CaptureActivity.REQ_CODE:
                 switch (resultCode) {
                     case RESULT_OK:
+                        // Primeste String cu codul scanat si il seteaza la TextView-ul corespunzator
                         String cod = data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT);
-                        tvResult.setText(cod);  //or do sth
+                        tvResult.setText(cod);
+                        // Cauta codul primit in baza de date si daca exista, seteaza numele produsului corespunzator la butonul goToProdus
                         goToProdus.setText(cautaCodInDb(cod));
                         break;
                     case RESULT_CANCELED:
                         if (data != null) {
-                            // for some reason camera is not working correctly
+                            // Camera nu functioneaza
                             tvResult.setText(data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT));
                         }
                         break;
@@ -126,27 +149,29 @@ private static final int REQ_CODE_PERMISSION = 0x1111;
         }
     }
 
+    // Functie pentru cautarea codului primit in urma scanarii in baza de date
     private String cautaCodInDb(String cod) {
-        String name = "nu exista in DB";
+        String name = getString(R.string.not_found);
         MyInventoryDBHelper dbHelper = new MyInventoryDBHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(DbContract.Produs.TABLE_NAME, new String[] { DbContract.Produs._ID, DbContract.Produs.COLUMN_COD, DbContract.Produs.COLUMN_NAME }, DbContract.Produs.COLUMN_COD_COMPLET + "=?", new String[] {cod}, null, null, null , null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int nameColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_NAME);
-            name = cursor.getString(nameColumnIndex);
-            int idColumnIndex = cursor.getColumnIndex(DbContract.Produs._ID);
-            id = cursor.getInt(idColumnIndex);
-        }
+            cursor = db.query(DbContract.Produs.TABLE_NAME, new String[]{DbContract.Produs._ID, DbContract.Produs.COLUMN_COD, DbContract.Produs.COLUMN_NAME}, DbContract.Produs.COLUMN_COD_COMPLET + "=?", new String[]{cod}, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int nameColumnIndex = cursor.getColumnIndex(DbContract.Produs.COLUMN_NAME);
+                name = cursor.getString(nameColumnIndex);
+                int idColumnIndex = cursor.getColumnIndex(DbContract.Produs._ID);
+                id = cursor.getInt(idColumnIndex);
+            }
         } catch (Exception e) {
-            Toast.makeText(mContext, "not Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
         }
+        // Setarea TextView-ului si Butonului ca si Vizibile
         goToProdus.setVisibility(View.VISIBLE);
+        tvResult.setVisibility(View.VISIBLE);
         return name;
     }
-
 
 
 }

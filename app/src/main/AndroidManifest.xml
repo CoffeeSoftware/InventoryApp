@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="comcoffeesoftware.httpsgithub.inventarsoft">
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_barcode_scan_black_48dp"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_barcode_scan_black_48dp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
@@ -19,11 +21,14 @@
         <activity android:name=".ListaProduseActivity" />
         <activity android:name=".EditorActivity" />
         <activity android:name=".ContactActivity" />
-        <activity android:name=".ScanActivity"></activity>
+        <activity android:name=".ScanActivity" />
+
         <provider
-            android:authorities="comcoffeesoftware.httpsgithub.inventarsoft"
             android:name=".ProdusProvider"
-            android:exported="false"/>
+            android:authorities="comcoffeesoftware.httpsgithub.inventarsoft"
+            android:exported="false" />
+
+        <activity android:name=".HelpActivity"></activity>
     </application>
 
 </manifest>

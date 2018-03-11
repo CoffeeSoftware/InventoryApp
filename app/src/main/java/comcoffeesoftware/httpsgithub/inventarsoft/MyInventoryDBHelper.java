@@ -1,18 +1,16 @@
 package comcoffeesoftware.httpsgithub.inventarsoft;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Db Helper for SQLite
+ * Clasa JAVA care extinde clasa SQLiteOpenHelper si care va fi folosita pentru crearea si manipularea bazei de date
  */
 
 public class MyInventoryDBHelper extends SQLiteOpenHelper {
 
-    public static final String LOG_TAG = MyInventoryDBHelper.class.getSimpleName();
+    // Constante pentru numele si versiunea bazei de date
     private static final String DATABASE_NAME = "inventory.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -24,6 +22,7 @@ public class MyInventoryDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
+        // Creare comanda SQLite pentru crearea tabelului
         final String SQL_CREATE_DATABASE = "CREATE TABLE " +
                 DbContract.Produs.TABLE_NAME + " (" +
                 DbContract.Produs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -33,15 +32,15 @@ public class MyInventoryDBHelper extends SQLiteOpenHelper {
                 DbContract.Produs.COLUMN_COD_COMPLET + " STRING" +
                 ");";
 
+        // Executarea comenzii SQLite create
         sqLiteDatabase.execSQL(SQL_CREATE_DATABASE);
 
     }
 
+    // Functie pentru upgradarea bazei de date
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DbContract.Produs.TABLE_NAME);
-
         onCreate(sqLiteDatabase);
     }
 }
