@@ -44,7 +44,7 @@
     <string name="help_lista_add">* Butonul de adaugare va trimite la pagina de insertie a unui produs nou de unde veti putea adauga un produs cu nume, cod si poza.</string>
     <string name="help_editare_title">Editare Produs</string>
     <string name="help_editare_intro">Pagina de editare a produsului are functie dubla: aici puteti introduce un produs nou cu nume, cod si poza sau puteti edita un produs deja existent. \n In primul camp de pe aceasta pagina trebuie introdus numele produsului. \n In al doilea camp trebuie introdus un cod al produsului de maxim 9 cifre.</string>
-    <string name="help_editare_save">Butonul de Salvare va ingaduie sa salvati produsul introdus in baza de date. Pentru a-l salva sunteti obligati sa introduceti un nume, un cod si sa faceti o poza a prodului. In caz contrar veti primi un mesaj care va va spune ca nu sunt suficiente date pentru a fi salvat produsul. </string>
+    <string name="help_editare_save">Butonul de Salvare va ingaduie sa salvati produsul introdus in baza de date. Pentru a-l salva sunteti obligati sa introduceti un nume, un cod si sa faceti o poza a prodului. In caz contrar veti primi un mesaj care va spune ca nu sunt suficiente date pentru a fi salvat produsul. </string>
     <string name="help_editare_delete">Butonul de Stergere va permite sa stergeti produsul pe care l-ati accesat.</string>
     <string name="help_editare_generare_cod">Butonul de Generare a codului de bare va afisa o imagine a codului de bare in format EAN13 corespunzator codului produsului.</string>
     <string name="help_editare_print">Butonul de Printare va permite sa printati eticheta generata care contine codul de bare, numele produsului si o semnatura introdusa de aplicatie.</string>
@@ -59,4 +59,5 @@
     <string name="help_contact_facebook">Acest buton va permite sa scrieti un mesaj prin aplicatia Messenger de la Facebook unuia dintre developeri. Functia este activa doar daca aveti instalata aplicatia Facebook Messenger.</string>
     <string name="help_contact_coin">Acest buton va permite sa donati pentru dezvoltarea aplicatiilor Coffee Software. (INCA NEIMPLEMENTAT)</string>
     <string name="help_contact_whatsApp">Acest buton va permite sa luati legatura cu un developer utilizand aplicatia WhatsApp Messenger. Functia e activa doar daca aveti aplicatia instalata pe telefon, in caz contrar veti primi un mesaj informativ.</string>
+    <string name="empty_view">There is nothing here.</string>
 </resources>

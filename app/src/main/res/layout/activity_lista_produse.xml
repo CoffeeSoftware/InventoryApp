@@ -8,18 +8,6 @@
     android:orientation="vertical"
     tools:context="comcoffeesoftware.httpsgithub.inventarsoft.ListaProduseActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add"
-        android:layout_width="72dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        app:backgroundTint="@color/colorAccent"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_library_plus_white_48dp" />
-
     <ListView
         android:id="@+id/list"
         android:layout_width="0dp"
@@ -34,15 +22,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/empty_view"
+        android:textColor="@color/primaryColor"
+        android:textSize="20sp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_library_plus_white_48dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/delete_all_button"
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
-        app:backgroundTint="@color/colorAccent"
         android:baselineAlignBottom="false"
         android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_delete_empty_white_48dp" />

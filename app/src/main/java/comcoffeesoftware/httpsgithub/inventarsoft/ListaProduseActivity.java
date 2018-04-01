@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -27,6 +28,8 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
     private static final int ITEM_LOADER = 0;
     // Context pentru referinta in functiile de mai jos
     private static Context mContext;
+    // Get TextView for empty view
+    TextView emptyTV;
     // Creare adaptor pentru cursor
     private AdaptorListaProduse mAdaptorListaProduse;
 
@@ -50,7 +53,8 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
 
         // Creare obiect ListView si initializare cu ListView-ul cu id=List din activity_lista_produse.xml
         ListView listView = findViewById(R.id.list);
-
+        // Initializare TextView pentru cazul in care nu e niciun produs de afisat
+        emptyTV = findViewById(R.id.empty_view);
         // Initializare adaptor
         mAdaptorListaProduse = new AdaptorListaProduse(this, null);
         // Setare adaptor la ListView
@@ -96,6 +100,9 @@ public class ListaProduseActivity extends AppCompatActivity implements LoaderMan
     // Resetarea adaptorului cu cursorul nou la finalul incarcarii Loader-ului
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor.getCount() == 0) {
+            emptyTV.setVisibility(View.VISIBLE);
+        } else emptyTV.setVisibility(View.GONE);
         mAdaptorListaProduse.swapCursor(cursor);
     }
 
